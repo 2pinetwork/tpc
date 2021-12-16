@@ -4,8 +4,9 @@ import { getWallet } from '../wallet'
 
 const processRegistration = async (options: OptionValues) => {
   const walletOptions = { mnemonic: options.mnemonic }
-  const key           = await registration(options.development)
-  const wallet        = key && (await getWallet(walletOptions))
+  const devMode       = options.development
+  const key           = await registration(devMode)
+  const wallet        = key && (await getWallet(key, walletOptions, devMode))
 
   if (key) {
     console.log('Your API key', key.key)

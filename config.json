@@ -16,5 +16,6 @@
   "apiKeysPath": "v1/api_keys",
   "confirmationsPath": "v1/confirmations",
   "sessionsPath": "v1/sessions",
-  "usersPath": "v1/users"
+  "usersPath": "v1/users",
+  "walletsPath": "v1/wallets"
 }

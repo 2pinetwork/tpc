@@ -1,16 +1,16 @@
 import { OptionValues } from 'commander'
 import getEndpoint from '../helpers/endpoint'
 import createApp from '../create'
-import { checkApiKey, getApiKey } from '../checkApiKey'
+import { getApiKeyAuthToken, getApiKey } from '../checkApiKey'
 import { configWallet } from '../wallet'
 
 const processCreateApp = async (project: string, options: OptionValues) => {
   const walletOptions = { mnemonic: options.mnemonic }
   const keyOptions    = { key: options.key, secret: options.secret }
   const key           = await getApiKey(keyOptions)
-  const valid         = await checkApiKey(key, options.development)
+  const token         = await getApiKeyAuthToken(key, options.development)
 
-  if (valid) {
+  if (token) {
     const endpoint                           = getEndpoint(options.development)
     const { address, mnemonic }              = configWallet(walletOptions)
     const { key: apiKey, secret: apiSecret } = key
