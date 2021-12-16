@@ -1,8 +1,7 @@
 import readlineSync from 'readline-sync'
 import config from '../config.json'
 import { post } from './helpers/request'
-
-type ApiKey = { key: string, secret: string }
+import { ApiKey } from './apiKey'
 
 export const getApiKey = async (
   { key, secret }: { key: string | undefined, secret: string | undefined }

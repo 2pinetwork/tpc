@@ -3,7 +3,9 @@ import packageConfig from '../package.json'
 
 const helpText = `
 Additinal sub-commands:
-  register              Signup for API keys
+  register              Signup and register for API keys
+  confirm               Confirm your account using the provided token via email
+  api-key               Generate API keys using an existing and confirmed user
   create-random-wallet  Creates locally a new random wallet
 
 Example call:

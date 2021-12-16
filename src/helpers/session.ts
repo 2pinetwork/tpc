@@ -1,23 +1,19 @@
-import axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
-import getEndpoint from './endpoint'
+import { handleResponse, post, validateStatus } from './request'
 import config from '../../config.json'
 
 type User = { email: string, password: string }
 
 export const getAuthToken = async (user: User, devMode: boolean): Promise<string> => {
-  const endpoint = getEndpoint(devMode)
-  const url      = `${endpoint}/${config.sessionsPath}`
-  const response = await axios.post(url, {
-    email:    user.email,
-    password: user.password
-  })
+  const path        = config.sessionsPath
+  const data        = { email: user.email, password: user.password }
+  const axiosConfig = { validateStatus: validateStatus(401) }
+  const response    = await post(path, data, axiosConfig, devMode)
 
-  if (response.status === 200) {
+  if (handleResponse(200, 401, response) && response.status === 200) {
     const { token } = response.data.data
 
     return token
   } else {
-    throw new Error(`Authentication failed, response status was ${response.status} (expecting 200)`)
+    process.exit(1)
   }
 }
-
