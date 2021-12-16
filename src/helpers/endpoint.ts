@@ -1,4 +1,4 @@
-import config from '../config.json'
+import config from '../../config.json'
 
 const getEndpoint = (devMode = false) => {
   const { protocol, hostname, port } = getEndpointData(devMode)

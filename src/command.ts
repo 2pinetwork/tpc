@@ -1,10 +1,18 @@
 import { Command, Option } from 'commander'
 import packageConfig from '../package.json'
 
-const command = (): { program: Command, projectPath: string } => {
-  let projectPath = null
-  const program   = new Command(packageConfig.name)
-  const help      = {
+const helpText = `
+Additinal sub-commands:
+  register              Signup for API keys
+  create-random-wallet  Creates locally a new random wallet
+
+Example call:
+  $ npx ${packageConfig.name} register`
+
+const command = (): { program: Command, project: string } => {
+  let project   = null
+  const program = new Command(packageConfig.name)
+  const help    = {
     version:     'output the current version',
     development: 'create the project with development endpoint (if in doubt, do not use)',
     mnemonic:    'provide your own mnemonic',
@@ -19,11 +27,12 @@ const command = (): { program: Command, projectPath: string } => {
     .addOption(new Option('-m, --mnemonic <words...>', help.mnemonic).env('MNEMONIC'))
     .addOption(new Option('-k, --key <key>', help.key).env('API_KEY'))
     .addOption(new Option('-s, --secret <secret>', help.secret).env('API_SECRET'))
+    .addHelpText('after', helpText)
     .argument('<project-name>', help.project)
-    .action(projectName => projectPath = projectName)
+    .action(projectName => project = projectName)
     .parse()
 
-  return { program, projectPath: String(projectPath) }
+  return { program, project: String(project) }
 }
 
 export default command
