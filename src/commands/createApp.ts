@@ -1,7 +1,8 @@
 import { OptionValues } from 'commander'
 import getEndpoint from '../helpers/endpoint'
+import { getApiKeyAuthToken } from '../helpers/session'
 import createApp from '../create'
-import { getApiKeyAuthToken, getApiKey } from '../checkApiKey'
+import { getApiKey } from '../checkApiKey'
 import { configWallet } from '../wallet'
 
 const processCreateApp = async (project: string, options: OptionValues) => {

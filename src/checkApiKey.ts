@@ -1,7 +1,5 @@
 import readlineSync from 'readline-sync'
-import config from '../config.json'
 import { ApiKey } from './apiKey'
-import { post, validateStatus } from './helpers/request'
 
 export const getApiKey = async (
   { key, secret }: { key: string | undefined, secret: string | undefined }
@@ -22,15 +20,4 @@ export const getApiKey = async (
 
     return result
   }
-}
-
-export const getApiKeyAuthToken = async (
-  apiKey:  ApiKey,
-  devMode: boolean
-): Promise<string | undefined> => {
-  const path        = config.sessionsPath
-  const axiosConfig = { validateStatus: validateStatus(401) }
-  const response    = await post(path, apiKey, axiosConfig, devMode)
-
-  return response.status === 200 ? response.data.data.token : undefined
 }

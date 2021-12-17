@@ -1,7 +1,7 @@
 import readlineSync from 'readline-sync'
 import { Wallet } from 'ethers'
 import { ApiKey } from './apiKey'
-import { getApiKeyAuthToken } from './checkApiKey'
+import { getApiKeyAuthToken } from './helpers/session'
 import config from '../config.json'
 import { handleResponse, post, validateStatus } from './helpers/request'
 
