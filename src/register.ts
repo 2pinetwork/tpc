@@ -4,11 +4,16 @@ import config from '../config.json'
 import confirmUser from './confirm'
 import { handleResponse, post, validateStatus } from './helpers/request'
 
-const postUser = async (user: User, devMode: boolean): Promise<boolean> => {
+type Account = {
+  name: string
+}
+
+const postUser = async (account: Account, user: User, devMode: boolean): Promise<boolean> => {
   try {
-    const path        = config.usersPath
+    const path        = config.accountsPath
     const axiosConfig = { validateStatus: validateStatus(422) }
-    const response    = await post(path, { user }, axiosConfig, devMode)
+    const params      = { account, user }
+    const response    = await post(path, params, axiosConfig, devMode)
 
     return handleResponse(201, 422, response)
   } catch (error) {
@@ -18,7 +23,16 @@ const postUser = async (user: User, devMode: boolean): Promise<boolean> => {
   }
 }
 
-const registerUser = async (devMode: boolean): Promise<User | boolean> => {
+const getAccount = (): Account => {
+  const name = readlineSync.question('Organization name: ')
+
+  return { name }
+}
+
+const registerUser = async (
+  account: Account,
+  devMode: boolean
+): Promise<User | boolean> => {
   const user: User = {}
   const questions  = {
     name:                  ['Name: ',                  false],
@@ -34,11 +48,12 @@ const registerUser = async (devMode: boolean): Promise<User | boolean> => {
     user[attribute] = readlineSync.question(text, options)
   }
 
-  return (await postUser(user, devMode)) && user
+  return (await postUser(account, user, devMode)) && user
 }
 
 const registration = async (devMode: boolean): Promise<ApiKey | undefined> => {
-  const user = await registerUser(devMode)
+  const account = getAccount()
+  const user    = await registerUser(account, devMode)
 
   return user ? (await confirmUser(user as User, devMode)) : undefined
 }
