@@ -5,15 +5,15 @@ import confirmUser from './confirm'
 import { handleResponse, post, validateStatus } from './helpers/request'
 
 type Account = {
-  name: string
+  name:        string,
+  memberships: Array<{ user: User }>
 }
 
-const postUser = async (account: Account, user: User, devMode: boolean): Promise<boolean> => {
+const postAccount = async (account: Account, devMode: boolean): Promise<boolean> => {
   try {
     const path        = config.accountsPath
     const axiosConfig = { validateStatus: validateStatus(422) }
-    const params      = { account, user }
-    const response    = await post(path, params, axiosConfig, devMode)
+    const response    = await post(path, { account }, axiosConfig, devMode)
 
     return handleResponse(201, 422, response)
   } catch (error) {
@@ -24,9 +24,9 @@ const postUser = async (account: Account, user: User, devMode: boolean): Promise
 }
 
 const getAccount = (): Account => {
-  const name = readlineSync.question('Organization name: ')
+  const name = readlineSync.question('Organization: ')
 
-  return { name }
+  return { name, memberships: [] }
 }
 
 const registerUser = async (
@@ -35,8 +35,7 @@ const registerUser = async (
 ): Promise<User | boolean> => {
   const user: User = {}
   const questions  = {
-    name:                  ['Name: ',                  false],
-    lastname:              ['Last name: ',             false],
+    name:                  ['Full name: ',             false],
     email:                 ['Email: ',                 false],
     password:              ['Password: ',              true],
     password_confirmation: ['Password confirmation: ', true]
@@ -48,7 +47,9 @@ const registerUser = async (
     user[attribute] = readlineSync.question(text, options)
   }
 
-  return (await postUser(account, user, devMode)) && user
+  account.memberships.push({ user })
+
+  return (await postAccount(account, devMode)) && user
 }
 
 const registration = async (devMode: boolean): Promise<ApiKey | undefined> => {
